@@ -1,2 +1,8 @@
 .stack-work/
 *~
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
