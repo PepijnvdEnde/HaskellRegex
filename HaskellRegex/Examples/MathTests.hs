@@ -3,6 +3,7 @@ module Main (main) where
 --run all the functions in the main function`
 main :: IO ()
 main = do
+  putStrLn "Hello, Haskell!"
   putStrLn "The 5th fibonacci number is: "
   print(fibonacci 5)
   putStrLn "The factorial of 5 is: "
