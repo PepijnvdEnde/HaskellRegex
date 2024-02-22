@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/HaskellRegex.iml" filepath="$PROJECT_DIR$/.idea/HaskellRegex.iml" />
+      <module fileurl="file://$PROJECT_DIR$/HaskellRegex.iml" filepath="$PROJECT_DIR$/HaskellRegex.iml" />
     </modules>
   </component>
 </project>
