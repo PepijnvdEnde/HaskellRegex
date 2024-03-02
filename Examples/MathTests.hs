@@ -14,7 +14,7 @@ factorial 0 = 1
 factorial n = n * factorial(n - 1)
 
 goldenRatio :: Float
-goldenRatio = (1 + sqrt 5)/2
+goldenRatio = (1 + sqrt 5)/2 
 
 isEven :: Int -> Bool
 isEven a -> a mod 2 == 0 -> True
