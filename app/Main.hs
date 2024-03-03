@@ -3,7 +3,7 @@ module Main (main) where
 import Data.List (isInfixOf, elemIndices)
 
 main :: IO ()
-main = print (regexMatch "(color)" "The color green")
+main = print (regexMatch "(The)(color)" "The color green")
 
 regexMatch :: String -> String -> Bool
 regexMatch regex input | regex == input = True
@@ -14,11 +14,16 @@ regexMatch regex input | regex == input = True
 containsSubstring :: String -> String -> Bool
 containsSubstring substring string = substring `isInfixOf` string
 
-extractAndMatchSubstring :: String -> String -> Bool
-extractAndMatchSubstring regex input 
-    | containsSubstring "(" regex && containsSubstring ")" regex = 
+extractSubstrings :: String -> [String]
+extractSubstrings regex
+    | not (containsSubstring "(" regex) || not (containsSubstring ")" regex) = []
+    | otherwise =
         let start = head (elemIndices '(' regex) + 1
             end = head (elemIndices ')' regex)
             substring = take (end - start) (drop start regex)
-        in containsSubstring substring input
-    | otherwise = False
+        in substring : extractSubstrings (drop (end + 1) regex)
+
+extractAndMatchSubstring :: String -> String -> Bool
+extractAndMatchSubstring regex input =
+    let substrings = extractSubstrings regex
+    in all (`containsSubstring` input) substrings
