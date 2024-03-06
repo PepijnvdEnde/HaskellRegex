@@ -3,12 +3,21 @@ module Main (main) where
 import Data.List (isInfixOf, elemIndices)
 
 main :: IO ()
-main = print (regexMatch "(green)(color)" "The green color")
+main = do
+    print (regexMatch "(green)(color)" "The green color")
+    print (regexMatch "[d-z]" "defghijklmnopqrstuvwxyz")
+    print (regexMatch "[a-c]" "defghijklmnopqrstuvwxyz")
+    print (regexMatch "[a-z]" "12345")
 
 regexMatch :: String -> String -> Bool
 regexMatch regex input
     | regex == "." = all (/= '\n') input
-    | otherwise = matchSubstringsInOrder (extractSubstrings regex) input
+    | containsCharacterRanges regex = any (`elem` processedRange) input
+    | otherwise = matchSubstringsInOrder (extractSubstrings (processCharacterRanges regex)) input
+    where
+        processedRange = processCharacterRanges regex
+        containsCharacterRanges = any (\c -> c `elem` ['a'..'z'] || c == '-')
+
 
 matchSubstringsInOrder :: [String] -> String -> Bool
 matchSubstringsInOrder [] _ = True
@@ -27,3 +36,13 @@ extractSubstrings regex
             end = head (elemIndices ')' regex)
             substring = take (end - start) (drop start regex)
         in substring : extractSubstrings (drop (end + 1) regex)
+
+-- Function to expand character ranges like [a-z]
+expandCharacterRange :: Char -> Char -> [Char]
+expandCharacterRange startChar endChar = [startChar..endChar]
+
+-- Function to process character ranges in the regex
+processCharacterRanges :: String -> String
+processCharacterRanges [] = []
+processCharacterRanges ('[':c:'-':d:']':cs) = expandCharacterRange c d ++ processCharacterRanges cs
+processCharacterRanges (c:cs) = c : processCharacterRanges cs
