@@ -19,3 +19,16 @@ goldenRatio = (1 + sqrt 5)/2
 isEven :: Int -> Bool
 isEven a -> a mod 2 == 0 -> True
 
+isOdd :: Int -> Bool
+isOdd a -> a mod 2 == 1 -> True
+
+isPrime :: Int -> Bool
+isPrime 1 = False
+isPrime 2 = True
+isPrime n = isPrime' n 2
+    where
+        isPrime' n i
+            | i == n = True
+            | n mod i == 0 = False
+            | otherwise = isPrime' n (i + 1)
+

@@ -8,16 +8,27 @@ main = do
     print (regexMatch "[d-z]" "defghijklmnopqrstuvwxyz")
     print (regexMatch "[a-c]" "defghijklmnopqrstuvwxyz")
     print (regexMatch "[a-z]" "12345")
+    print (regexMatch "x*" "")
+    print (regexMatch "x*" "x")    
+    print (regexMatch "x*" "xx")
+    print (regexMatch "x*" "xxxxx")
+    print (regexMatch "x*" "abc")
 
 regexMatch :: String -> String -> Bool
 regexMatch regex input
     | regex == "." = all (/= '\n') input
+    | regex == "x*" = matchZeroOrMore 'x' input
     | containsCharacterRanges regex = any (`elem` processedRange) input
     | otherwise = matchSubstringsInOrder (extractSubstrings (processCharacterRanges regex)) input
     where
         processedRange = processCharacterRanges regex
         containsCharacterRanges = any (\c -> c `elem` ['a'..'z'] || c == '-')
 
+matchZeroOrMore :: Char -> String -> Bool
+matchZeroOrMore _ "" = True
+matchZeroOrMore c (x:xs)
+    | x == c = matchZeroOrMore c xs
+    | otherwise = matchSubstringsInOrder [x:xs] xs
 
 matchSubstringsInOrder :: [String] -> String -> Bool
 matchSubstringsInOrder [] _ = True
@@ -37,11 +48,9 @@ extractSubstrings regex
             substring = take (end - start) (drop start regex)
         in substring : extractSubstrings (drop (end + 1) regex)
 
--- Function to expand character ranges like [a-z]
 expandCharacterRange :: Char -> Char -> [Char]
 expandCharacterRange startChar endChar = [startChar..endChar]
 
--- Function to process character ranges in the regex
 processCharacterRanges :: String -> String
 processCharacterRanges [] = []
 processCharacterRanges ('[':c:'-':d:']':cs) = expandCharacterRange c d ++ processCharacterRanges cs
